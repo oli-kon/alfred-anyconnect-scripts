@@ -116,6 +116,8 @@ def connect(wf):
 
     log.debug("%s command is %s", func_name, cmd)
 
+    #TODO: Add error handling, when Cisco AnyConnect fails to connect we need to show error
+
     subprocess.Popen(cmd,
                      shell=True,
                      executable="/bin/bash",
