@@ -124,7 +124,18 @@ def connect(wf):
                      stdout=subprocess.PIPE,
                      stderr=subprocess.PIPE).communicate()
 
-    return send_notification('VPN', 'Connected')
+    ret = send_notification('VPN', 'Connected')
+
+    gui_cmd = "open -a \"/Applications/Cisco/Cisco AnyConnect Secure Mobility Client.app\""
+    cmd = gui_cmd
+
+    subprocess.Popen(cmd,
+                     shell=True,
+                     executable="/bin/bash",
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE).communicate()
+
+    return ret
 
 def disconnect(wf):
     func_name = disconnect.__name__
