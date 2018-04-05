@@ -110,30 +110,38 @@ def get_domain():
 def connect(wf):
     func_name = connect.__name__
 
+    ret = send_notification('VPN', 'Connecting...')
+
     credentials = "printf '0\\n" + get_username() + "\\n" + get_pin(wf) + calculate_key() + "\\ny'" # group + username + pin + 6-digit
     vpn_cmd = "/opt/cisco/anyconnect/bin/vpn -s connect '" + get_domain() + "'"
     cmd = credentials + " | " + vpn_cmd
 
     log.debug("%s command is %s", func_name, cmd)
 
-    #TODO: Add error handling, when Cisco AnyConnect fails to connect we need to show error
+    #TODO: Add error handling, when Cisco AnyConnect fails to connect we need to show error in Notification
 
-    subprocess.Popen(cmd,
+    proc = subprocess.Popen(cmd,
                      shell=True,
                      executable="/bin/bash",
                      stdout=subprocess.PIPE,
-                     stderr=subprocess.PIPE).communicate()
+                     stderr=subprocess.PIPE)
+
+    ret_code = proc.communicate()[0], proc.returncode
 
     ret = send_notification('VPN', 'Connected')
 
     gui_cmd = "open -a \"/Applications/Cisco/Cisco AnyConnect Secure Mobility Client.app\""
     cmd = gui_cmd
 
-    subprocess.Popen(cmd,
+    log.debug("%s command is %s", func_name, cmd)
+
+    proc = subprocess.Popen(cmd,
                      shell=True,
                      executable="/bin/bash",
                      stdout=subprocess.PIPE,
-                     stderr=subprocess.PIPE).communicate()
+                     stderr=subprocess.PIPE)
+
+    ret_code = proc.communicate()[0], proc.returncode
 
     return ret
 
